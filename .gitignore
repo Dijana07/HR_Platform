@@ -1,0 +1,11 @@
+# Visual Studio files
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+
+# Node files
+node_modules/
+dist/
+.env
