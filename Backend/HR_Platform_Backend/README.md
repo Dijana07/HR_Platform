@@ -21,7 +21,7 @@ Database contains the following entities:
 
 Relationship between `Candidate` and `Skill` is many-to-many through `CandidateSkill`.
 
-![Database Design](../images/database.png)
+![Database Design](../../images/database.png)
 ---
 
 # Technologies Used
