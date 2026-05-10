@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -32,12 +36,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
+    --text: #000000;
+    --text-name: #1b2141;
+    --text-h: #1b2141;
+    --bg: #f9fafc;
+    --border: #1b2141;
+    --button: #3046c7;
     --code-bg: #1f2028;
-    --accent: #c084fc;
+    --accent: #330364;
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
@@ -51,11 +57,11 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -67,32 +73,47 @@ body {
 }
 
 h1,
-h2 {
+h2, h3 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 66px;
   letter-spacing: -1.68px;
   margin: 32px 0;
+  text-align: left;
   @media (max-width: 1024px) {
-    font-size: 36px;
+    font-size: 46px;
     margin: 20px 0;
+    text-align: left;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
   @media (max-width: 1024px) {
-    font-size: 20px;
+    font-size: 30px;  
+    text-align: left;
+  }
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.2px;
+  margin: 0 0 10px;
+  @media (max-width: 1024px) {
+    font-size: 24px;
+    text-align: center;
   }
 }
 p {
-  margin: 0;
+  margin: 0 0 10px;
 }
 
 code,
@@ -108,4 +129,60 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+.candidate-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.candidate-card h3 {
+  margin: 0 0 8px;
+  color: var(--text-name);
+}
+
+.candidates-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.skill-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 12px;
+  margin-right: 8px;
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: var(--accent-border);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 0 20px;
+}
+
+.options {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  input, select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    width: 300px;
+    background-color: #fff;
+
+    @media (max-width: 1024px) {
+      width: 200px;
+    }
+  }
 }
