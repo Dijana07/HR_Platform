@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using Domain.DTOs;
+using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,14 @@ namespace Presentation.Controllers
             var skill = await _skillService.GetSkillByNameAsync(name);
             if (skill == null) return NotFound();
             return Ok(skill);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSkill([FromBody] SkillDTO skill)
+        {
+            var result = await _skillService.AddSkillAsync(skill);
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(result.Message);
         }
     }
 }

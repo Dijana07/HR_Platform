@@ -13,5 +13,6 @@ namespace Domain.Services
         Task<SkillDTO?> GetSkillByIdAsync(int skillId);
         Task<SkillDTO?> GetSkillByNameAsync(string name);
         Task<List<SkillDTO>> GetAllSkillsAsync();
+        Task<ResultDTO> AddSkillAsync(SkillDTO skill);
     }
 }

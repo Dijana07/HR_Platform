@@ -86,11 +86,7 @@ namespace Infrastructure.Repositories
 
         public async Task<int> UpdateCandidateAsync(Candidate candidate)
         {
-            return await dbContext.Candidates.Where(c => c.Id == candidate.Id).ExecuteUpdateAsync(c => c
-                .SetProperty(p => p.Name, candidate.Name)
-                .SetProperty(p => p.DateOfBirth, candidate.DateOfBirth)
-                .SetProperty(p => p.ContactNumber, candidate.ContactNumber)
-                .SetProperty(p => p.Email, candidate.Email));
+            return await dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Candidate>> GetAllCandidatesAsync()

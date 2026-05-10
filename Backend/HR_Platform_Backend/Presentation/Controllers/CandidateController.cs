@@ -40,9 +40,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCandidate(int id, [FromBody] CandidateDTO candidate)
+        public async Task<IActionResult> UpdateCandidate(int id, [FromBody] List<SkillDTO> skills)
         {
-            var result = await _candidateService.UpdateCandidateAsync(id, candidate);
+            var result = await _candidateService.UpdateCandidateAsync(id, skills);
             if (!result.Success) return BadRequest(result.Message);
             return Ok(result.Message);
         }
@@ -69,6 +69,13 @@ namespace Presentation.Controllers
             var result = await _candidateService.RemoveSkillFromCandidateAsync(candidateId, skillId);
             if (!result.Success) return BadRequest(result.Message);
             return Ok(result.Message);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCandidates([FromQuery] string? name, [FromQuery] List<string>? skills)
+        {
+            var candidates = await _candidateService.SearchCandidatesAsync(name, skills);
+            return Ok(candidates);
         }
     }
 }

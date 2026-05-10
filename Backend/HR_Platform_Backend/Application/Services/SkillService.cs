@@ -19,6 +19,33 @@ namespace Application.Services
             _skillRepository = skillRepository;
         }
 
+        public async Task<ResultDTO> AddSkillAsync(SkillDTO skillDTO)
+        {
+            // check if skill already exists
+            if (await _skillRepository.GetSkillByNameAsync(skillDTO.Name) != null)
+            {
+                return new ResultDTO
+                {
+                    Success = false,
+                    Message = "Skill already exists"
+                };
+            }
+            var result = await _skillRepository.AddSkillAsync(SkillMapper.DtoToEntity(skillDTO));
+            if (result.Id <= 0)
+            {
+                return new ResultDTO
+                {
+                    Success = false,
+                    Message = "Failed to add skill"
+                };
+            }
+            return new ResultDTO
+            {
+                Success = true,
+                Message = "Skill added successfully"
+            };
+        }
+
         public async Task<List<SkillDTO>> GetAllSkillsAsync()
         {
             var skills = await _skillRepository.GetAllSkillsAsync();

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services
 {
@@ -225,11 +226,12 @@ namespace Application.Services
         {
             var candidates = await _candidateRepository.SearchCandidatesByNameAsync(name ?? "");
 
-            return candidates.Where(c => skills == null || !skills.Any() || c.CandidateSkills.Any(cs => skills.Contains(cs.Skill.Name)))
+            return candidates.Where(c => skills == null || !skills.Any() 
+            || skills.All(skill => c.CandidateSkills.Any(cs => cs.Skill.Name == skill)))
                 .Select(c => CandidateMapper.EntityToDto(c)).ToList();
         }
 
-        public async Task<ResultDTO> UpdateCandidateAsync(int candidateId, CandidateDTO candidate)
+        public async Task<ResultDTO> UpdateCandidateAsync(int candidateId, List<SkillDTO> skills)
         {
             var candidateResult = await _candidateRepository.GetCandidateByIdAsync(candidateId);
             if (candidateResult == null)
@@ -241,16 +243,15 @@ namespace Application.Services
                 };
             }
 
-            candidateResult.Name = candidate.Name;
-            candidateResult.DateOfBirth = candidate.DateOfBirth;
-            candidateResult.Email = candidate.Email;
-            candidateResult.ContactNumber = candidate.ContactNumber;
-            candidateResult.CandidateSkills = candidate.Skills.Select(s => new CandidateSkill
+            candidateResult.CandidateSkills.Clear();
+
+            candidateResult.CandidateSkills = skills.Select(skill => new CandidateSkill
             {
                 CandidateId = candidateId,
-                SkillId = s.Id.Value
+                SkillId = skill.Id!.Value
             }).ToList();
 
+            
             var updateResult = await _candidateRepository.UpdateCandidateAsync(candidateResult);
             if (updateResult <= 0)
             {
