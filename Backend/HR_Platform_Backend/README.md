@@ -115,3 +115,20 @@ API can be tested using:
 
 - Swagger UI
 - Postman
+
+# Unit Tests
+
+Backend contains unit tests for:
+
+- validators
+- service layer logic
+
+Tests are implemented using:
+
+- NUnit
+- Moq
+
+Run tests through:
+
+- Visual Studio Test Explorer
+
