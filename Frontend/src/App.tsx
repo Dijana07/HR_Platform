@@ -6,7 +6,7 @@ import { getSkills } from './api/skillApi'
 import AddCandidateModal from './components/candidates/AddCandidateModal'
 import SkillsFilter from './components/skills/SkillsFilter'
 import EditCandidateModal from './components/candidates/EditCandidateModal'
-import type { SkillDTO } from './domain/SkillDTO'
+import type { SkillDTO } from './domain/DTOs/SkillDTO'
 import { Button } from '@material-tailwind/react'
 
 function App() {
@@ -75,8 +75,8 @@ function App() {
       <hr className='mb-4 border-2 rounded-sm'/>
       <div className='container'>
         <h3>There's a new candidate? Add them here:</h3>
-        <Button onClick={() => setOpenAddModal(true)}>
-          Add Candidate
+        <Button className="bg-[var(--text-name)]" onClick={() => setOpenAddModal(true)}>
+          Add candidate
         </Button>
         <AddCandidateModal 
           open={openAddModal}

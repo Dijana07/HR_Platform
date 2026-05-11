@@ -7,19 +7,14 @@ export const getCandidates = async () => {
   });
 }
 
-export const getCandidateById = async (id: number) => {
-  return await apiClient(`/Candidate/${id}`, 
-  {
-    method: "GET",
-  });
-}
-
 export const createCandidate = async (candidateData: any) => {
-  return await apiClient("/Candidate", 
+  var res = await apiClient("/Candidate", 
   {
     method: "POST",
     body: JSON.stringify(candidateData),
   });
+  console.log(res);
+  return res;
 }   
 
 export const updateCandidate = async (id: number, candidateData: any) => {
@@ -34,20 +29,6 @@ export const updateCandidate = async (id: number, candidateData: any) => {
 export const deleteCandidate = async (id: number) => {
     return await apiClient(`/Candidate/${id}`,
     {
-        method: "DELETE",
-    });
-}
-
-export const addSkillToCandidate = async (candidateId: number, skillId: number) => {
-    return await apiClient(`/Candidate/${candidateId}/skills/${skillId}`,
-    {
-        method: "POST",
-    });
-}
-
-export const removeSkillFromCandidate = async (candidateId: number, skillId: number) => {
-    return await apiClient(`/Candidate/${candidateId}/skills/${skillId}`,
-    {   
         method: "DELETE",
     });
 }

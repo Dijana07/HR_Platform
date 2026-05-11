@@ -8,7 +8,7 @@ import {
 import { Xmark } from "iconoir-react";
 import SkillsFilter from "../skills/SkillsFilter";
 import React, { useState } from "react";
-import type { SkillDTO } from "../../domain/SkillDTO";
+import type { SkillDTO } from "../../domain/DTOs/SkillDTO";
 import { SkillBadge } from "../skills/SkillBadge";
 import { createCandidate } from "../../api/candidateApi";
 
@@ -32,14 +32,45 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates, ref
     const handleAddCandidate = async () => {
         try {
             if (formData.name && formData.email && formData.dateOfBirth && formData.contactNumber) {
-                await createCandidate({
+                if (!formData.name.trim()) {
+                    alert("Name is required.");
+                    return;
+                }
+
+                if (!formData.contactNumber.trim()) {
+                    alert("Contact number is required.");
+                    return;
+                }
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.email)) {
+                    alert("Invalid email address.");
+                    return;
+                }
+
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (isNaN(Date.parse(formData.dateOfBirth)) || !dateRegex.test(formData.dateOfBirth)) {
+                    alert("Invalid date. Expected format: YYYY-MM-DD.");
+                    return;
+                }
+
+                const phoneRegex = /^\+?[0-9]{6,}$/;
+                if (!phoneRegex.test(formData.contactNumber)) {
+                    alert("Contact number can contain at least 6 numbers and optional '+'");
+                    return;
+                }
+
+                var res = await createCandidate({
                     ...formData,
                     skills: selectedSkills
                 });
 
-                await refreshCandidates();
-                setOpen(false);
-                alert("Candidate added successfully!");
+                alert(res.message);
+                if (res.success)
+                {
+                    await refreshCandidates();
+                    setOpen(false);
+                }
             } else {
                 alert("Please fill in all required fields.");
             }
@@ -64,7 +95,7 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates, ref
                 <Xmark className="h-5 w-5" />
             </Dialog.DismissTrigger>
             <Typography type="h6" className="mb-1">
-                Add Candidate
+                Add candidate
             </Typography>
             <Typography className="text-foreground">
                 Enter candidate details to add them to the platform.
@@ -118,7 +149,7 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates, ref
                 <Input
                     id="dateOfBirth"
                     type="date"
-                    placeholder="1990-01-01"
+                    placeholder="YYYY-MM-DD"
                     required
                     value={formData.dateOfBirth}
                     onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
@@ -138,7 +169,7 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates, ref
                 <Input
                     id="contactNumber"
                     type="text"
-                    placeholder="123-456-7890"
+                    placeholder="+1234567890"
                     required
                     value={formData.contactNumber}
                     onChange={(e) => setFormData({...formData, contactNumber: e.target.value})}
@@ -172,8 +203,8 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates, ref
                     )}
                 </div>
                 </div>
-                <Button isFullWidth onClick={handleAddCandidate}>
-                    Add Candidate
+                <Button type="button" className="bg-[var(--text-name)]" isFullWidth onClick={handleAddCandidate}>
+                    Add candidate
                 </Button>
             </form>
             </Dialog.Content>

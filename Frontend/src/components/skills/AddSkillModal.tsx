@@ -23,13 +23,21 @@ export default function AddSkillModal({open, setOpen, refreshSkills} : AddSkillM
     const handleAddSkill = async () => {
         try {
             if (formData.name) {
+                if (!formData.name.trim()) {
+                    alert("Skill name is required.");
+                    return;
+                }
+                
                 const res = await createSkill({
                     ...formData
                 });
 
-                await refreshSkills();
-                alert(res.message || "Skill added successfully!");
-                setOpen(false);
+                alert(res.message);
+                if (res.success)
+                {
+                    await refreshSkills();
+                    setOpen(false);
+                }
             } else {
                 alert("Please fill in all required fields.");
             }
@@ -54,7 +62,7 @@ export default function AddSkillModal({open, setOpen, refreshSkills} : AddSkillM
                 <Xmark className="h-5 w-5" />
             </Dialog.DismissTrigger>
             <Typography type="h6" className="mb-1">
-                Add Skill
+                Add skill
             </Typography>
             <Typography className="text-foreground">
                 Enter skill name to add them to the platform.
@@ -79,7 +87,7 @@ export default function AddSkillModal({open, setOpen, refreshSkills} : AddSkillM
                     />
                 </div>
                 <Button isFullWidth onClick={handleAddSkill}>
-                    Add Skill
+                    Add skill
                 </Button>
             </form>
             </Dialog.Content>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SkillDTO } from "../../domain/SkillDTO";
+import type { SkillDTO } from "../../domain/DTOs/SkillDTO";
 import { Button } from "@material-tailwind/react";
 import AddSkillModal from "./AddSkillModal";
 
@@ -22,7 +22,7 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
         <button
             id="dropdownDefault"
             data-dropdown-toggle="dropdown"
-            className="text-white bg-black font-medium rounded-lg text-sm px-4 py-2.5 inline-flex"
+            className="text-white bg-[var(--text-name)] font-medium rounded-lg text-sm px-4 py-2.5 inline-flex"
             type="button"
             onClick={() => setOpen(!open)}
         >
@@ -82,13 +82,16 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
             </ul>
 
             {buttonName === "Add new skill" && (
-            <Button onClick={() => setOpenAddSkillModal(true)} className="mt-3 ml-10">
-                Add new skill
-                <AddSkillModal
-                    open={openAddSkillModal}
-                    setOpen={setOpenAddSkillModal}
-                    refreshSkills={refreshSkills}/>
-            </Button>
+                <>
+                    <Button onClick={() => setOpenAddSkillModal(true)} className="mt-3 ml-10">
+                        Add new skill
+                    </Button>
+
+                    <AddSkillModal
+                        open={openAddSkillModal}
+                        setOpen={setOpenAddSkillModal}
+                        refreshSkills={refreshSkills}/>
+                </>
             )}
         </div>
         </div>
