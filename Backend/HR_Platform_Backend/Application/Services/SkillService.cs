@@ -51,19 +51,5 @@ namespace Application.Services
             var skills = await _skillRepository.GetAllSkillsAsync();
             return skills.Select(s => SkillMapper.EntityToDto(s)).ToList();
         }
-
-        public async Task<SkillDTO?> GetSkillByIdAsync(int skillId)
-        {
-            var skill = await _skillRepository.GetSkillByIdAsync(skillId);
-            if (skill == null) return null;
-            return SkillMapper.EntityToDto(skill);
-        }
-
-        public async Task<SkillDTO?> GetSkillByNameAsync(string name)
-        {
-            var skill = await _skillRepository.GetSkillByNameAsync(name);
-            if (skill == null) return null;
-            return SkillMapper.EntityToDto(skill);
-        }
     }
 }

@@ -61,20 +61,6 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<List<Candidate>> GetCandidateBySkillsAsync(List<string> skills)
-        {
-            return await dbContext.Candidates
-                .Include(c => c.CandidateSkills)
-                .ThenInclude(cs => cs.Skill)
-                .Where(c => c.CandidateSkills.Any(cs => skills.Contains(cs.Skill.Name)))
-                .ToListAsync();
-        }
-
-        public async Task<int> RemoveSkillFromCandidateAsync(int candidateId, int skillId)
-        {
-            return await dbContext.CandidateSkills.Where(cs => cs.CandidateId == candidateId && cs.SkillId == skillId).ExecuteDeleteAsync();
-        }
-
         public async Task<List<Candidate>> SearchCandidatesByNameAsync(string name)
         {
             return await dbContext.Candidates

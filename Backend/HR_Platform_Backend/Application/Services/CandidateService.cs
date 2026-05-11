@@ -118,7 +118,7 @@ namespace Application.Services
             }
         }
 
-        public async Task<ResultDTO> AddSkillToCandidateAsync(int candidateId, int skillId)
+        private async Task<ResultDTO> AddSkillToCandidateAsync(int candidateId, int skillId)
         {
             var skillResult = await _skillRepository.GetSkillByIdAsync(skillId);
             if (skillResult == null)
@@ -170,56 +170,6 @@ namespace Application.Services
         {
             var candidates = await _candidateRepository.GetAllCandidatesAsync();
             return candidates.Select(c => CandidateMapper.EntityToDto(c)).ToList();
-        }
-
-        public async Task<CandidateDTO?> GetCandidateByIdAsync(int id)
-        {
-            var candidate = await _candidateRepository.GetCandidateByIdAsync(id);
-            if (candidate == null)
-            {
-                return null;
-            }
-
-            return CandidateMapper.EntityToDto(candidate);
-        }
-
-        public async Task<ResultDTO> RemoveSkillFromCandidateAsync(int candidateId, int skillId)
-        {
-            var candidateResult = await _candidateRepository.GetCandidateByIdAsync(candidateId);
-            if (candidateResult == null)
-            {
-                return new ResultDTO
-                {
-                    Success = false,
-                    Message = $"Candidate with ID {candidateId} does not exist"
-                };
-            }
-
-            var skillResult = await _skillRepository.GetSkillByIdAsync(skillId);
-            if (skillResult == null)
-            {
-                return new ResultDTO
-                {
-                    Success = false,
-                    Message = $"Skill with ID {skillId} does not exist"
-                };
-            }
-
-            var removeSkillResult = await _candidateRepository.RemoveSkillFromCandidateAsync(candidateId, skillId);
-            if (removeSkillResult <= 0)
-            {
-                return new ResultDTO
-                {
-                    Success = false,
-                    Message = $"Failed to remove skill with ID {skillId} from candidate"
-                };
-            }
-
-            return new ResultDTO
-            {
-                Success = true,
-                Message = "Skill removed from candidate successfully"
-            };
         }
 
         public async Task<List<CandidateDTO>> SearchCandidatesAsync(string? name, List<string>? skills)

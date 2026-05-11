@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace Tests.Services
 {
     [TestFixture]
     public class CandidateServiceTests
@@ -390,7 +390,7 @@ namespace Tests
                 .Setup(x => x.SearchCandidatesByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(new List<Candidate>());
 
-            var result = await candidateService.SearchCandidatesAsync("pe",null);
+            var result = await candidateService.SearchCandidatesAsync("pe", null);
 
             Assert.IsNotNull(result);
             Assert.That(result.Count, Is.EqualTo(0));
@@ -401,7 +401,7 @@ namespace Tests
         {
             var candidates = new List<Candidate>
             {
-                new Candidate { Id = 1, Name = "Anne Smith", CandidateSkills = new List<CandidateSkill> 
+                new Candidate { Id = 1, Name = "Anne Smith", CandidateSkills = new List<CandidateSkill>
                     { new CandidateSkill { Skill = new Skill { Name = "React" }}}},
                 new Candidate { Id = 2, Name = "John Peterson", CandidateSkills = new List<CandidateSkill>
                     { new CandidateSkill { Skill = new Skill { Name = "Angular" }}}}
@@ -411,7 +411,7 @@ namespace Tests
                 .Setup(x => x.SearchCandidatesByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(candidates);
 
-            var result = await candidateService.SearchCandidatesAsync("", new List<string>{"React"});
+            var result = await candidateService.SearchCandidatesAsync("", new List<string> { "React" });
 
             Assert.IsNotNull(result);
             Assert.That(result.Count, Is.EqualTo(1));
@@ -434,7 +434,7 @@ namespace Tests
                 .Setup(x => x.SearchCandidatesByNameAsync(It.IsAny<string>()))
                 .ReturnsAsync(candidates);
 
-            var result = await candidateService.SearchCandidatesAsync("",new List<string> {"React", "C#"});
+            var result = await candidateService.SearchCandidatesAsync("", new List<string> { "React", "C#" });
 
             Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("Anne Smith"));
@@ -449,7 +449,7 @@ namespace Tests
                 .Setup(x => x.GetCandidateByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync((Candidate)null);
 
-            var result = await candidateService.UpdateCandidateAsync( 1, new List<SkillDTO>());
+            var result = await candidateService.UpdateCandidateAsync(1, new List<SkillDTO>());
 
             Assert.IsNotNull(result);
             Assert.That(result.Success, Is.False);
@@ -459,7 +459,7 @@ namespace Tests
         [Test]
         public async Task UpdateCandidateAsync_ShouldReturnFalse_WhenRepositoryDoesntUpdate()
         {
-            var candidate = new Candidate { Id = 1, CandidateSkills = new List<CandidateSkill>()};
+            var candidate = new Candidate { Id = 1, CandidateSkills = new List<CandidateSkill>() };
 
             candidateRepository
                 .Setup(x => x.GetCandidateByIdAsync(It.IsAny<int>()))
@@ -469,17 +469,17 @@ namespace Tests
                 .Setup(x => x.UpdateCandidateAsync(It.IsAny<Candidate>()))
                 .ReturnsAsync(0);
 
-            var result = await candidateService.UpdateCandidateAsync(1, new List<SkillDTO> { new SkillDTO{Id = 1, Name = "React"}});
+            var result = await candidateService.UpdateCandidateAsync(1, new List<SkillDTO> { new SkillDTO { Id = 1, Name = "React" } });
 
             Assert.IsNotNull(result);
             Assert.That(result.Success, Is.False);
-            Assert.That( result.Message, Is.EqualTo("Failed to update candidate"));
+            Assert.That(result.Message, Is.EqualTo("Failed to update candidate"));
         }
 
         [Test]
         public async Task UpdateCandidateAsync_ShouldUpdateCandidate()
         {
-            var candidate = new Candidate { Id = 1, CandidateSkills = new List<CandidateSkill>()};
+            var candidate = new Candidate { Id = 1, CandidateSkills = new List<CandidateSkill>() };
 
             candidateRepository
                 .Setup(x => x.GetCandidateByIdAsync(It.IsAny<int>()))
@@ -489,19 +489,19 @@ namespace Tests
                 .Setup(x => x.UpdateCandidateAsync(It.IsAny<Candidate>()))
                 .ReturnsAsync(1);
 
-            var skills = new List<SkillDTO> { new SkillDTO { Id = 1, Name = "React"}, new SkillDTO { Id = 2, Name = "C#" }};
+            var skills = new List<SkillDTO> { new SkillDTO { Id = 1, Name = "React" }, new SkillDTO { Id = 2, Name = "C#" } };
 
             var result = await candidateService.UpdateCandidateAsync(1, skills);
 
             Assert.IsNotNull(result);
             Assert.That(result.Success, Is.True);
-            Assert.That( result.Message, Is.EqualTo("Candidate updated successfully"));
+            Assert.That(result.Message, Is.EqualTo("Candidate updated successfully"));
         }
 
         [Test]
         public async Task UpdateCandidateAsync_ShouldReplaceCandidateSkills()
         {
-            var candidate = new Candidate{ Id = 1, CandidateSkills = new List<CandidateSkill> { new CandidateSkill {SkillId = 99}} };
+            var candidate = new Candidate { Id = 1, CandidateSkills = new List<CandidateSkill> { new CandidateSkill { SkillId = 99 } } };
 
             candidateRepository
                 .Setup(x => x.GetCandidateByIdAsync(It.IsAny<int>()))
@@ -511,7 +511,7 @@ namespace Tests
                 .Setup(x => x.UpdateCandidateAsync(It.IsAny<Candidate>()))
                 .ReturnsAsync(1);
 
-            var skills = new List<SkillDTO>{ new SkillDTO{Id = 1, Name = "React"}};
+            var skills = new List<SkillDTO> { new SkillDTO { Id = 1, Name = "React" } };
 
             await candidateService.UpdateCandidateAsync(1, skills);
 

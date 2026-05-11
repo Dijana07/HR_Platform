@@ -28,12 +28,6 @@ namespace Infrastructure.Repositories
             return skill;
         }
 
-        public async Task<int> DeleteSkillAsync(Skill skill)
-        {
-
-            return await dbContext.Skills.Where(s => s.Id == skill.Id).ExecuteDeleteAsync();
-        }
-
         public async Task<List<Skill>> GetAllSkillsAsync()
         {
             return await dbContext.Skills.ToListAsync();
@@ -49,10 +43,5 @@ namespace Infrastructure.Repositories
             return await dbContext.Skills.FirstOrDefaultAsync(s => s.Name == name);
         }
 
-        public async Task<int> UpdateSkillAsync(Skill skill)
-        {
-            return await dbContext.Skills.Where(s => s.Id == skill.Id)
-                .ExecuteUpdateAsync(s => s.SetProperty(sk => sk.Name, skill.Name));
-        }
     }
 }

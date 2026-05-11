@@ -1,4 +1,5 @@
-﻿using Domain.DTOs;
+﻿using Application.Validators;
+using Domain.DTOs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,27 +24,22 @@ namespace Presentation.Controllers
             return Ok(skills);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetSkillById(int id)
-        {
-            var skill = await _skillService.GetSkillByIdAsync(id);
-            if (skill == null) return NotFound();
-            return Ok(skill);
-        }
-
-        [HttpGet("search")]
-        public async Task<IActionResult> GetSkillByName([FromQuery] string name)
-        {
-            var skill = await _skillService.GetSkillByNameAsync(name);
-            if (skill == null) return NotFound();
-            return Ok(skill);
-        }
 
         [HttpPost]
         public async Task<IActionResult> AddSkill([FromBody] SkillDTO skill)
         {
+            var valid = SkillValidator.ValidateSkillDto(skill);
+            if (!valid.Success)
+            {
+                return BadRequest(valid.Message);
+            }
+
             var result = await _skillService.AddSkillAsync(skill);
-            if (!result.Success) return BadRequest(result.Message);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
             return Ok(result.Message);
         }
     }

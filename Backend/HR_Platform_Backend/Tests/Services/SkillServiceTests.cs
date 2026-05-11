@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace Tests.Services
 {
     [TestFixture]
     public class SkillServiceTests
@@ -86,7 +86,7 @@ namespace Tests
 
             skillRepository
                 .Setup(x => x.GetSkillByNameAsync(It.IsAny<string>()))
-                .ReturnsAsync(new Skill{ Name = "Python" });
+                .ReturnsAsync(new Skill { Name = "Python" });
 
             var result = await skillService.AddSkillAsync(skill);
 

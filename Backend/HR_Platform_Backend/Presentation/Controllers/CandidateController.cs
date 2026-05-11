@@ -1,4 +1,5 @@
-﻿using Domain.DTOs;
+﻿using Application.Validators;
+using Domain.DTOs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,27 +24,38 @@ namespace Presentation.Controllers
             return Ok(candidates);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCandidateById(int id)
-        {
-            var candidate = await _candidateService.GetCandidateByIdAsync(id);
-            if (candidate == null) return NotFound();
-            return Ok(candidate);
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddCandidate([FromBody] CandidateDTO candidate)
         {
+            var isValid = CandidateValidator.ValidateCandidateDto(candidate);
+            if (!isValid.Success)
+            {
+                return BadRequest(isValid.Message);
+            }
+
             var result = await _candidateService.AddCandidateAsync(candidate);
-            if (!result.Success) return BadRequest(result.Message);
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
             return Ok(result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCandidate(int id, [FromBody] List<SkillDTO> skills)
         {
+            var isValid = SkillValidator.ValidateSkills(skills);
+            if (!isValid.Success)
+            {
+                return BadRequest(isValid.Message);
+            }
+
             var result = await _candidateService.UpdateCandidateAsync(id, skills);
-            if (!result.Success) return BadRequest(result.Message);
+            if (!result.Success)
+            { 
+                return BadRequest(result.Message); 
+            }
             return Ok(result.Message);
         }
 
@@ -51,23 +63,10 @@ namespace Presentation.Controllers
         public async Task<IActionResult> DeleteCandidate(int id)
         {
             var result = await _candidateService.DeleteCandidateAsync(id);
-            if (!result.Success) return BadRequest(result.Message);
-            return Ok(result.Message);
-        }
-
-        [HttpPost("{candidateId}/skills/{skillId}")]
-        public async Task<IActionResult> AddSkillToCandidate(int candidateId, int skillId)
-        {
-            var result = await _candidateService.AddSkillToCandidateAsync(candidateId, skillId);
-            if (!result.Success) return BadRequest(result.Message);
-            return Ok(result.Message);
-        }
-
-        [HttpDelete("{candidateId}/skills/{skillId}")]
-        public async Task<IActionResult> RemoveSkillFromCandidate(int candidateId, int skillId)
-        {
-            var result = await _candidateService.RemoveSkillFromCandidateAsync(candidateId, skillId);
-            if (!result.Success) return BadRequest(result.Message);
+            if (!result.Success)
+            { 
+                return BadRequest(result.Message); 
+            }
             return Ok(result.Message);
         }
 
