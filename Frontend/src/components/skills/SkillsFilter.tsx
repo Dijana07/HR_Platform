@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { SkillDTO } from "../../domain/SkillDTO";
+import { Button } from "@material-tailwind/react";
+import AddSkillModal from "./AddSkillModal";
 
 type SkillsFilterProps = {
     skills: SkillDTO[];
@@ -7,14 +9,16 @@ type SkillsFilterProps = {
     onSkillSelect: (skills: SkillDTO[]) => void;
     buttonName?: string;
     onButtonClick?: (skills: SkillDTO[]) => void;
+    refreshSkills: () => Promise<void>;
 };
 
-export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, buttonName, onButtonClick }: SkillsFilterProps) {
+export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, buttonName, refreshSkills }: SkillsFilterProps) {
     const [open, setOpen] = useState(false);
-    
+    const [openAddSkillModal, setOpenAddSkillModal] = useState(false);
+
     return (
         <>
-        <div className="relative">
+        <div className="relative flex justify-end w-full">
         <button
             id="dropdownDefault"
             data-dropdown-toggle="dropdown"
@@ -22,7 +26,7 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
             type="button"
             onClick={() => setOpen(!open)}
         >
-            {buttonName === "Apply" ? "Filter skills" : "Select skills"}
+            {buttonName === "Add new skill" ? "Select skills" : "Filter skills"}
 
             <svg
                 className="w-4 h-4 ml-2"
@@ -43,15 +47,15 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
 
         <div
             id="dropdown"
-            className={`${open ? "block" : "hidden" } absolute top-full right-0 mt-0 z-10 w-60 p-4 bg-white rounded-lg shadow border border-gray-400`}
+            className={`${open ? "block" : "hidden" } text-left absolute top-full right-0 mt-0 z-10 w-60 p-4 bg-white rounded-lg shadow border border-gray-400`}
         >
             <h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 Skills
             </h6>
 
-            <ul className="space-y-2 text-sm text-left" aria-labelledby="dropdownDefault">
+            <ul className="flex flex-col items-start w-full space-y-2" aria-labelledby="dropdownDefault">
                 {skills.map((skill) => (
-                    <li key={skill.id} className="flex !justify-start !items-start gap-2 ">
+                    <li key={skill.id} className="flex flex-row items-center justify-start w-full gap-2">
                         <input
                             id={skill.name}
                             type="checkbox"
@@ -69,7 +73,7 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
 
                         <label
                             htmlFor={skill.name}
-                            className="text-left w-full text-sm font-medium text-gray-900 dark:text-gray-100"
+                            className="w-full text-sm font-medium text-gray-900 dark:text-gray-100"
                             >
                             {skill.name}
                         </label>
@@ -78,16 +82,13 @@ export default function SkillsFilter({ skills, selectedSkills, onSkillSelect, bu
             </ul>
 
             {buttonName === "Add new skill" && (
-            <button
-                
-                className="w-40 text-white bg-black hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 mt-4"
-                onClick={() => {
-                    setOpen(false);
-                    onButtonClick?.(selectedSkills);
-                }}
-            >
+            <Button onClick={() => setOpenAddSkillModal(true)} className="mt-3 ml-10">
                 Add new skill
-            </button>
+                <AddSkillModal
+                    open={openAddSkillModal}
+                    setOpen={setOpenAddSkillModal}
+                    refreshSkills={refreshSkills}/>
+            </Button>
             )}
         </div>
         </div>

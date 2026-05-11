@@ -41,14 +41,13 @@ function App() {
     setCandidates(response || []);
   };
 
-  useEffect(() => {
-    fetchCandidates();
+  const fetchSkills = async () => {
+    const response = await getSkills();
+    setSkills(response || []);
+  };
 
-    const fetchSkills = async () => {
-      const response = await getSkills();
-      setSkills(response || []);
-    }
-    
+  useEffect(() => {
+    fetchCandidates();    
     fetchSkills();
   }, []);
 
@@ -67,6 +66,8 @@ function App() {
         setOpen={setOpenEditModal}
         key={selectedCandidate.id}
         refreshCandidates={fetchCandidates}
+        refreshSkills={fetchSkills}
+        skills={skills}
       />
     )}
       <h1>HR Platform</h1>
@@ -80,20 +81,23 @@ function App() {
         <AddCandidateModal 
           open={openAddModal}
           setOpen={setOpenAddModal}
-          refreshCandidates={fetchCandidates}/>
+          refreshCandidates={fetchCandidates}
+          refreshSkills={fetchSkills}
+          skills={skills}/>
       </div>
       <hr className='mt-4 mb-0 border-2 rounded-sm'/>
       <div className='container'>
         <div className='options'>
           <input
+            className='search-input'
             type="text"
-            placeholder="Search candidates..."
+            placeholder="Search candidates by name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
 
           <SkillsFilter skills={skills} selectedSkills={selectedSkills} 
-            onSkillSelect={setSelectedSkills} />
+            onSkillSelect={setSelectedSkills} refreshSkills={fetchSkills}/>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -7,9 +7,8 @@ import {
 } from "@material-tailwind/react";
 import { Xmark } from "iconoir-react";
 import SkillsFilter from "../skills/SkillsFilter";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { SkillDTO } from "../../domain/SkillDTO";
-import { getSkills } from "../../api/skillApi";
 import { SkillBadge } from "../skills/SkillBadge";
 import { createCandidate } from "../../api/candidateApi";
 
@@ -17,10 +16,11 @@ type AddCandidateModalProps = {
     refreshCandidates: () => Promise<void>;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    refreshSkills: () => Promise<void>;
+    skills: SkillDTO[];
 }
 
-export default function AddCandidateModal({open, setOpen, refreshCandidates} : AddCandidateModalProps) {
-    const [skills, setSkills] = useState<SkillDTO[]>([]);
+export default function AddCandidateModal({open, setOpen, refreshCandidates, refreshSkills, skills} : AddCandidateModalProps) {
     const [selectedSkills, setSelectedSkills] = useState<SkillDTO[]>([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -28,18 +28,6 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates} : A
         dateOfBirth: "",
         contactNumber: "",
     });
-
-    useEffect(() => {
-        const fetchSkills = async () => {
-            try {
-                const skillsData = await getSkills();
-                setSkills(skillsData);
-            } catch (error) {
-                console.error("Error fetching skills:", error);
-            }
-        };
-        fetchSkills();
-    }, []); 
 
     const handleAddCandidate = async () => {
         try {
@@ -167,8 +155,12 @@ export default function AddCandidateModal({open, setOpen, refreshCandidates} : A
                         Skills
                     </Typography>
 
-                    <SkillsFilter skills={skills} selectedSkills={selectedSkills} 
-                        onSkillSelect={setSelectedSkills} buttonName="Add new skill"/>
+                    <SkillsFilter 
+                        skills={skills} 
+                        selectedSkills={selectedSkills} 
+                        onSkillSelect={setSelectedSkills} 
+                        buttonName="Add new skill" 
+                        refreshSkills={refreshSkills}/>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {selectedSkills.length ? (

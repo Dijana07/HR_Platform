@@ -9,20 +9,20 @@ import { Xmark } from "iconoir-react";
 import type { CandidateDTO } from "../../domain/DTOs/CandidateDTO";
 import { SkillBadge } from "../skills/SkillBadge";
 import SkillsFilter from "../skills/SkillsFilter";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { SkillDTO } from "../../domain/SkillDTO";
-import { getSkills } from "../../api/skillApi";
-import { updateCandidate } from "../../api/candidateApi";
+import { deleteCandidate, updateCandidate } from "../../api/candidateApi";
 
 type EditCandidateModalProps = {
     candidate: CandidateDTO;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     refreshCandidates: () => Promise<void>;
+    refreshSkills: () => Promise<void>;
+    skills: SkillDTO[];
 };
 
-export default function EditCandidateModal({candidate, open, setOpen, refreshCandidates} : EditCandidateModalProps) {
-    const [skills, setSkills] = useState<SkillDTO[]>([]);
+export default function EditCandidateModal({candidate, open, setOpen, refreshCandidates, refreshSkills, skills} : EditCandidateModalProps) {
     const [candidateSkills, setCandidateSkills] = useState<SkillDTO[]>(candidate.skills || []);
 
     const handleUpdateCandidate = async () => {
@@ -38,17 +38,19 @@ export default function EditCandidateModal({candidate, open, setOpen, refreshCan
         }
     }
 
-    useEffect(() => {
-        const fetchSkills = async () => {
-            try {
-                const skillsData = await getSkills();
-                setSkills(skillsData);
-            } catch (error) {
-                console.error("Error fetching skills:", error);
-            }   
-        };
-        fetchSkills();
-    }, []);
+     const handleDeleteCandidate = async () => {
+        try {
+            if (window.confirm("Are you sure you want to delete this candidate? This action cannot be reversed."))
+            {
+                await deleteCandidate(candidate.id || 0);
+                await refreshCandidates();
+                setOpen(false);
+                alert("Candidate deleted successfully!");
+            }
+        } catch (error) {
+            console.error("Error deleting candidate:", error);
+        }
+    }
     
     return (
         <Dialog size="sm" open={open}>
@@ -155,8 +157,12 @@ export default function EditCandidateModal({candidate, open, setOpen, refreshCan
                         Skills
                     </Typography>
 
-                    <SkillsFilter skills={skills} selectedSkills={candidateSkills} 
-                        onSkillSelect={setCandidateSkills} buttonName="Add new skill"/>
+                    <SkillsFilter 
+                        skills={skills} 
+                        selectedSkills={candidateSkills} 
+                        onSkillSelect={setCandidateSkills} 
+                        buttonName="Add new skill" 
+                        refreshSkills={refreshSkills}/>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {candidateSkills?.length ? (
@@ -171,6 +177,36 @@ export default function EditCandidateModal({candidate, open, setOpen, refreshCan
                 <Button isFullWidth onClick={handleUpdateCandidate}>
                     Update Candidate
                 </Button>
+                <Typography type="p" className="mb-1 text-center">
+                    or
+                </Typography>
+                <div className="flex justify-center">
+                    <Button
+                        color="error"
+                        className="flex gap-2"
+                        onClick={() => handleDeleteCandidate()}
+                        >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4h8v2" />
+                            <path d="M19 6l-1 14H6L5 6" />
+                            <path d="M10 11v6" />
+                            <path d="M14 11v6" />
+                        </svg>
+
+                        Delete
+                    </Button>
+                </div>
             </form>
             </Dialog.Content>
         </Dialog.Overlay>
