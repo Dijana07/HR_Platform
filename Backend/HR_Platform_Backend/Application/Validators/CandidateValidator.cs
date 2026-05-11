@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Application.Validators
@@ -11,11 +12,12 @@ namespace Application.Validators
     {
         public static ResultDTO ValidateCandidateDto(CandidateDTO candidate)
         {
-            List<string> errors = new();
             if (candidate == null)
             {
                 return new ResultDTO{ Success = false, Message = "DTO not found." };
             }
+
+            List<string> errors = new();
             if (string.IsNullOrEmpty(candidate.Name))
             {
                 errors.Add("name");
@@ -48,6 +50,24 @@ namespace Application.Validators
                     }
                 }
                 return new ResultDTO { Success = false, Message = msg };
+            }
+
+            if (!Regex.IsMatch(candidate.ContactNumber, @"^\+?[0-9]{6,}$"))
+            {
+                return new ResultDTO
+                {
+                    Success = false,
+                    Message = "Contact number can contain at least 6 numbers and optional '+'"
+                };
+            }
+
+            if (candidate.DateOfBirth > DateOnly.FromDateTime(DateTime.Now))
+            {
+                return new ResultDTO
+                {
+                    Success = false,
+                    Message = "Date of birth cannot be in the future"
+                };
             }
 
             // it's empty but just in case

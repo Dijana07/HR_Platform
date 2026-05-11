@@ -30,16 +30,16 @@ namespace Presentation.Controllers
             var isValid = CandidateValidator.ValidateCandidateDto(candidate);
             if (!isValid.Success)
             {
-                return BadRequest(isValid.Message);
+                return BadRequest(isValid);
             }
 
             var result = await _candidateService.AddCandidateAsync(candidate);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
@@ -48,15 +48,15 @@ namespace Presentation.Controllers
             var isValid = SkillValidator.ValidateSkills(skills);
             if (!isValid.Success)
             {
-                return BadRequest(isValid.Message);
+                return BadRequest(isValid);
             }
 
             var result = await _candidateService.UpdateCandidateAsync(id, skills);
             if (!result.Success)
             { 
-                return BadRequest(result.Message); 
+                return BadRequest(result); 
             }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
@@ -65,9 +65,9 @@ namespace Presentation.Controllers
             var result = await _candidateService.DeleteCandidateAsync(id);
             if (!result.Success)
             { 
-                return BadRequest(result.Message); 
+                return BadRequest(result); 
             }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpGet("search")]

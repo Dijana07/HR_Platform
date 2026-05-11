@@ -56,16 +56,6 @@ namespace Tests.Validators
         }
 
         [Test]
-        [TestCase(false, "Skills are required.")]
-        public void ValidateSkillDto_ShouldReturnFalse_WhenSkillsAreNull(bool expectedSuccess, string expectedMessage)
-        {
-            var result = SkillValidator.ValidateSkills(null);
-
-            Assert.That(result.Success, Is.EqualTo(expectedSuccess));
-            Assert.That(result.Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
         [TestCase(null, false, "All skills must have valid IDs.")]
         public void ValidateSkillDto_ShouldReturnFalse_WhenSkillsIdsAreInvalid(int? id, bool expectedSuccess, string expectedMessage)
         {

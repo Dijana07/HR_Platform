@@ -18,11 +18,7 @@ namespace Application.Helpers.Mappers
                 Name = dto.Name,
                 DateOfBirth = dto.DateOfBirth,
                 Email = dto.Email,
-                ContactNumber = dto.ContactNumber,
-                CandidateSkills = dto.Skills?.Select(s => new CandidateSkill
-                {
-                    SkillId = s.Id ?? 0
-                }).ToList() ?? new List<CandidateSkill>()
+                ContactNumber = dto.ContactNumber
             };
         }
 

@@ -25,11 +25,6 @@ namespace Application.Validators
 
         public static ResultDTO ValidateSkills(List<SkillDTO> skills)
         {
-            if (skills == null)
-            {
-                return new ResultDTO { Success = false, Message = "Skills are required." };
-            }
-
             if (skills.Any(x => x.Id == null || x.Id <= 0))
             {
                 return new ResultDTO { Success = false, Message = "All skills must have valid IDs." };

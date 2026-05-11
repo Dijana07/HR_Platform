@@ -195,12 +195,14 @@ namespace Application.Services
 
             candidateResult.CandidateSkills.Clear();
 
-            candidateResult.CandidateSkills = skills.Select(skill => new CandidateSkill
+            if (skills != null)
             {
-                CandidateId = candidateId,
-                SkillId = skill.Id!.Value
-            }).ToList();
-
+                candidateResult.CandidateSkills = skills.Select(skill => new CandidateSkill
+                {
+                    CandidateId = candidateId,
+                    SkillId = skill.Id!.Value
+                }).ToList();
+            }
             
             var updateResult = await _candidateRepository.UpdateCandidateAsync(candidateResult);
             if (updateResult <= 0)

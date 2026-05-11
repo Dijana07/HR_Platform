@@ -31,16 +31,16 @@ namespace Presentation.Controllers
             var valid = SkillValidator.ValidateSkillDto(skill);
             if (!valid.Success)
             {
-                return BadRequest(valid.Message);
+                return BadRequest(valid);
             }
 
             var result = await _skillService.AddSkillAsync(skill);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
-            return Ok(result.Message);
+            return Ok(result);
         }
     }
 }

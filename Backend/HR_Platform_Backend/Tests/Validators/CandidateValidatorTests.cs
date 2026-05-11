@@ -21,6 +21,29 @@ namespace Tests.Validators
         }
 
         [Test]
+        [TestCase(" ", false, "Contact number can contain at least 6 numbers and optional '+'")]
+        [TestCase("aaa", false, "Contact number can contain at least 6 numbers and optional '+'")]
+        [TestCase("060", false, "Contact number can contain at least 6 numbers and optional '+'")]
+        public void ValidateCandidateDto_ShouldReturnFalse_WhenContactNumberFormatIsNotValid(string contact, bool expectedSuccess, string expectedMessage)
+        {
+            var dto = new CandidateDTO { Name = "John Doe", Email = "someone@mail.com", ContactNumber = contact, DateOfBirth = new DateOnly(2000, 1, 1) };
+            var result = CandidateValidator.ValidateCandidateDto(dto);
+
+            Assert.That(result.Success, Is.EqualTo(expectedSuccess));
+            Assert.That(result.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ValidateCandidateDto_ShouldReturnFalse_WhenDateOfBirthIsInTheFuture()
+        {
+            var dto = new CandidateDTO { Name = "John Doe", Email = "someone@mail.com", ContactNumber = "+111111111", DateOfBirth = new DateOnly(2030, 12, 1) };
+            var result = CandidateValidator.ValidateCandidateDto(dto);
+
+            Assert.That(result.Success, Is.EqualTo(false));
+            Assert.That(result.Message, Is.EqualTo("Date of birth cannot be in the future"));
+        }
+
+        [Test]
         [TestCase(null, false, "Missing required field(s): name")]
         [TestCase("", false, "Missing required field(s): name")]
         public void ValidateCandidateDto_ShouldReturnFalse_WhenNameIsNullOrEmpty(string? name, bool expectedSuccess, string expectedMessage)
