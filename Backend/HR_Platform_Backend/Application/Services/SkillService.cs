@@ -22,7 +22,7 @@ namespace Application.Services
         public async Task<ResultDTO> AddSkillAsync(SkillDTO skillDTO)
         {
             // check if skill already exists
-            if (await _skillRepository.GetSkillByNameAsync(skillDTO.Name) != null)
+            if (await _skillRepository.GetSkillByNameAsync(skillDTO.Name.Trim()) != null)
             {
                 return new ResultDTO
                 {

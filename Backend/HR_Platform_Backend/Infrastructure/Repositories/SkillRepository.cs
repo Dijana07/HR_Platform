@@ -40,7 +40,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Skill?> GetSkillByNameAsync(string name)
         {
-            return await dbContext.Skills.FirstOrDefaultAsync(s => s.Name == name);
+            return await dbContext.Skills.FirstOrDefaultAsync(s => s.Name.ToLower() == name.ToLower());
         }
 
     }
